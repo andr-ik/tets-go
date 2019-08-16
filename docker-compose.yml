@@ -1,0 +1,35 @@
+version: '2.3'
+
+services:
+
+  consul:
+    image: propeller:latest
+    command: "agent -dev -bind=0.0.0.0 -client=0.0.0.0 -server -ui -bootstrap -config-file=/config/propeller.json -enable-script-checks"
+    ports:
+      - "8500:8500"
+    volumes:
+      - ./config/propeller.json/:/config/propeller.json
+
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one
+    ports:
+      - "5775:5775/udp"
+      - "6831:6831/udp"
+      - "6832:6832/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14268:14268"
+
+  redis:
+    image: 'redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - '6379:6379'
+
+  mailhog:
+    container_name: mailhog
+    image: 'mailhog/mailhog:latest'
+    ports:
+      - '1025:1025'
+      - '8025:8025'
